@@ -17,7 +17,6 @@ dependencies = [
 [project.optional-dependencies]
 dev = [
     "ruff>=0.7",
-    "numpy>=1.26"
 ]
 # define the packages dir, changes from cwd ("") to "src"
 # Adds all packages under the "src" directory
