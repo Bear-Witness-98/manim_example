@@ -112,9 +112,23 @@
 #         )
 
 import numpy as np
-from manim import VGroup, ThreeDScene, ThreeDAxes, DEGREES, IN, DEFAULT_STROKE_WIDTH, PI, RED, GREEN, BLUE, Tex, Write, UL
-from scipy.integrate import odeint
-from scipy.integrate import solve_ivp
+from manim import (
+    BLUE,
+    DEFAULT_STROKE_WIDTH,
+    DEGREES,
+    GREEN,
+    IN,
+    PI,
+    RED,
+    UL,
+    Tex,
+    ThreeDAxes,
+    ThreeDScene,
+    VGroup,
+    Write,
+)
+from scipy.integrate import odeint, solve_ivp
+
 
 def lorenz_system(t, state, sigma=10, rho=28, beta=8 / 3):
     x, y, z = state
@@ -125,13 +139,9 @@ def lorenz_system(t, state, sigma=10, rho=28, beta=8 / 3):
 
 
 def ode_solution_points(function, state0, time, dt=0.01):
-    solution = solve_ivp(
-        function,
-        t_span=(0, time),
-        y0=state0,
-        t_eval=np.arange(0, time, dt)
-    )
+    solution = solve_ivp(function, t_span=(0, time), y0=state0, t_eval=np.arange(0, time, dt))
     return solution.y.T
+
 
 class LorenzAttractor(ThreeDScene):
     def construct(self):
@@ -147,11 +157,10 @@ class LorenzAttractor(ThreeDScene):
         axes.center()
 
         # camera still cant move :F
-        self.set_camera_orientation(phi=2*PI/5, theta=PI/5)
+        self.set_camera_orientation(phi=2 * PI / 5, theta=PI / 5)
         # self.frame.reorient(43, 76, 1, IN, 10)
         # self.frame.add_updater(lambda m, dt: m.increment_theta(dt * 3 * DEGREES))
         self.add(axes)
-
 
         # Add the equations
         equations = Tex(
@@ -171,7 +180,6 @@ class LorenzAttractor(ThreeDScene):
 
         equations.to_corner(UL)
         self.add_fixed_in_frame_mobjects(equations)
-
 
         # equations.fix_in_frame()
         # equations.to_corner(UL)
