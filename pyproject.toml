@@ -107,6 +107,7 @@ ignore = [
     "ANN201",  # Don't require type annotations for function output.
     "W291",    # Remove annoying warning that gets solved on save.
     "W293",    # Remove annoying warning that gets solved on save.
+    "B905",    # Random thing for zip
     "ANN101",  # Don't require type annotations for self.
     "ANN102",  # Don't require type annotations for cls.
     "ANN401",  # Any is allowed.
