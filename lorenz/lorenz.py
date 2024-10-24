@@ -179,6 +179,7 @@ class LorenzAttractor(ThreeDScene):
         )
 
         equations.to_corner(UL)
+        equations.set_background_stroke()
         self.add_fixed_in_frame_mobjects(equations)
 
         # equations.fix_in_frame()
