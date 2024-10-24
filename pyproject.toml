@@ -103,6 +103,8 @@ unfixable = [
     "F401", # remove unused import (when first writing the import, saving, and then using).
 ]
 ignore = [
+    "ANN001",  # Don't require type annotations for function input.
+    "ANN201",  # Don't require type annotations for function output.
     "ANN101",  # Don't require type annotations for self.
     "ANN102",  # Don't require type annotations for cls.
     "ANN401",  # Any is allowed.
