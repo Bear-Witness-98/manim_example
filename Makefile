@@ -1,4 +1,4 @@
-.PHONY: setup setdown install
+.PHONY: setup setdown install scene
 setup:		## Setup environment
 	pip install virtualenv
 	virtualenv .venv
@@ -11,3 +11,6 @@ install:
 
 install-dev:
 	pip install -e .[dev]
+
+scene:
+	manim -pql lorenz/lorenz.py LorenzAttractor
