@@ -124,16 +124,20 @@ from manim import (
     PI,
     RED,
     RIGHT,
+    TAU,
     UL,
+    UP,
     Circle,
     Create,
     Dot,
     Group,
+    Rotate,
     Scene,
     Tex,
     ThreeDAxes,
     ThreeDScene,
     TracedPath,
+    UpdateFromAlphaFunc,
     VGroup,
     VMobject,
     Write,
@@ -196,18 +200,13 @@ class LorenzAttractor(ThreeDScene):
 
         equations.to_corner(UL)
         equations.set_background_stroke()
-        self.move_camera(
-            phi=2 * PI / 5,
-            theta=-PI / 5,
-            run_time=7,
-        )
 
-        self.begin_ambient_camera_rotation(rate=1, about="theta")
-
+        # Add equations to fixed frame
         self.add_fixed_in_frame_mobjects(equations)
         self.play(Write(equations))
 
-        self.stop_ambient_camera_rotation(about="theta")
+        # Begin camera rotation
+        self.begin_ambient_camera_rotation(rate=1, about="theta")
 
         # compute solutions to the differential equation
         # Compute a set of solutions
@@ -220,37 +219,44 @@ class LorenzAttractor(ThreeDScene):
         curves = VGroup()
         for state, color in zip(states, colors):
             points = ode_solution_points(lorenz_system, state, evolution_time)
-            curve = VMobject().set_points_smoothly(points)
-            curve.set_stroke(color, 1, opacity=0.25)
-            curves.add(curve)
+            curve = VMobject()
+            curve.set_points_smoothly([axes.c2p(*point) for point in points])
+            curve.set_stroke(color, 10, opacity=0.25)
+            self.add(curve)
 
-        curves.set_stroke(width=2, opacity=1)
+        self.add(curves)
 
         # Display dots moving along those trajectories
-        sth = [Dot(color=color, radius=0.25) for color in colors]
-        dots = Group(*sth)
+        dots = VGroup(*[Dot(color=color, radius=0.25) for color in colors])
 
-        def update_dots(dots: Group, curves=curves):
-            for dot, curve in zip(dots.submobjects, curves):
-                dot.move_to(curve.get_end())
-
-        dots.add_updater(update_dots)
-
-        sth_else = [
-            TracedPath(dot, dissipating_time=3).match_color(dot) for dot in dots
-        ]
-        tail = VGroup(*sth_else)
-
-        self.add(dots)
-        self.add(tail)
-        curves.set_opacity(0)
-        # import ipdb
-
-        # ipdb.set_trace()
-        self.play(
-            [dots for dots in curve for curve in curves],
-            run_time=evolution_time,
+        # Create the traced path (trails)
+        traced_paths = VGroup(
+            *[
+                TracedPath(dot.get_center, dissipating_time=3).match_color(dot)
+                for dot in dots
+            ]
         )
+
+        def update_dots(dots, dt):
+            for dot, curve in zip(dots.submobjects, curves):
+                alpha = (
+                    self.time / evolution_time
+                ) % 1  # Use time to calculate the position along the curve
+                dot.move_to(curve.point_from_proportion(alpha))
+
+        # Add updater for the dots
+        dots.add_updater(update_dots)
+        self.add(dots, traced_paths)
+
+        # Play the animation over evolution_time
+        self.play(
+            UpdateFromAlphaFunc(dots, update_dots),
+            run_time=evolution_time,
+            rate_func=linear,
+        )
+
+        # Stop camera rotation at the end
+        self.stop_ambient_camera_rotation(about="theta")
 
 
 class TracedPathExample(Scene):
