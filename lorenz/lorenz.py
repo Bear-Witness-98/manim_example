@@ -183,5 +183,15 @@ class LorenzAttractor(ThreeDScene):
 
         equations.to_corner(UL)
         equations.set_background_stroke()
+        self.move_camera(
+            phi=2 * PI / 5,
+            theta=-PI / 5,
+            run_time=7,
+        )
+
+        self.begin_ambient_camera_rotation(rate=1, about="theta")
+
         self.add_fixed_in_frame_mobjects(equations)
         self.play(Write(equations))
+
+        self.stop_ambient_camera_rotation(about="theta")
