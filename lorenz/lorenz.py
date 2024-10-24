@@ -139,7 +139,9 @@ def lorenz_system(t, state, sigma=10, rho=28, beta=8 / 3):
 
 
 def ode_solution_points(function, state0, time, dt=0.01):
-    solution = solve_ivp(function, t_span=(0, time), y0=state0, t_eval=np.arange(0, time, dt))
+    solution = solve_ivp(
+        function, t_span=(0, time), y0=state0, t_eval=np.arange(0, time, dt)
+    )
     return solution.y.T
 
 
@@ -165,24 +167,21 @@ class LorenzAttractor(ThreeDScene):
         # Add the equations
         equations = Tex(
             R"""
-                Whatever text is here
+                This a very profound and deep text \\
+                $ \frac{\mathrm{d} x}{\mathrm{d} y} = \sigma(y-x) $ \\
+                $ \frac{\mathrm{d} y}{\mathrm{~d} t} = x(\rho-z) - y $ \\
+                $ \frac{\mathrm{d} z}{\mathrm{~d} t}  = xy - \beta z $
             """,
-            # \frac{\mathrm{d} x}{\mathrm{~d} t} & =\sigma(y-x) \\
-            # \frac{\mathrm{d} y}{\mathrm{~d} t} & =x(\rho-z)-y \\
-            # \frac{\mathrm{d} z}{\mathrm{~d} t} & =x y-\beta z
-            # t2c={
+            # god only knows how to use this below:
+            # tex_to_color_map={
             #     "x": RED,
             #     "y": GREEN,
             #     "z": BLUE,
             # },
-            # font_size=30
+            font_size=30,
         )
 
         equations.to_corner(UL)
         equations.set_background_stroke()
         self.add_fixed_in_frame_mobjects(equations)
-
-        # equations.fix_in_frame()
-        # equations.to_corner(UL)
-        # equations.set_backstroke()
         self.play(Write(equations))
