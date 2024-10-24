@@ -105,6 +105,8 @@ unfixable = [
 ignore = [
     "ANN001",  # Don't require type annotations for function input.
     "ANN201",  # Don't require type annotations for function output.
+    "W291",    # Remove annoying warning that gets solved on save.
+    "W293",    # Remove annoying warning that gets solved on save.
     "ANN101",  # Don't require type annotations for self.
     "ANN102",  # Don't require type annotations for cls.
     "ANN401",  # Any is allowed.
