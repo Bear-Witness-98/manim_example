@@ -206,7 +206,7 @@ class LorenzAttractor(ThreeDScene):
         self.play(Write(equations))
 
         # Begin camera rotation
-        self.begin_ambient_camera_rotation(rate=1, about="theta")
+        self.begin_ambient_camera_rotation(rate=0.25, about="theta")
 
         # compute solutions to the differential equation
         # Compute a set of solutions
