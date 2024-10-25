@@ -210,50 +210,59 @@ class LorenzAttractor(ThreeDScene):
 
         # compute solutions to the differential equation
         # Compute a set of solutions
-        epsilon = 1e-5
+        epsilon = 1
         evolution_time = 30
-        n_points = 10
+        n_points = 2
         states = [[10, 10, 10 + n * epsilon] for n in range(n_points)]
-        colors = color_gradient([BLUE_E, BLUE_A], len(states))
+        colors = color_gradient([BLUE, RED], len(states))
 
         curves = VGroup()
         for state, color in zip(states, colors):
+            # compute the evolution points for the initial conditions
             points = ode_solution_points(lorenz_system, state, evolution_time)
+            # convert to manim object and set style
             curve = VMobject()
             curve.set_points_smoothly([axes.c2p(*point) for point in points])
-            curve.set_stroke(color, 10, opacity=0.25)
-            self.add(curve)
+            curve.set_stroke(color, 3, opacity=0.9)
+            # add to Vgroup
+            curves.add(curve)
+            # self.play(Create(curve), run_time=20)
 
-        self.add(curves)
-
-        # Display dots moving along those trajectories
-        dots = VGroup(*[Dot(color=color, radius=0.25) for color in colors])
-
-        # Create the traced path (trails)
-        traced_paths = VGroup(
-            *[
-                TracedPath(dot.get_center, dissipating_time=3).match_color(dot)
-                for dot in dots
-            ]
-        )
-
-        def update_dots(dots, dt):
-            for dot, curve in zip(dots.submobjects, curves):
-                alpha = (
-                    self.time / evolution_time
-                ) % 1  # Use time to calculate the position along the curve
-                dot.move_to(curve.point_from_proportion(alpha))
-
-        # Add updater for the dots
-        dots.add_updater(update_dots)
-        self.add(dots, traced_paths)
-
-        # Play the animation over evolution_time
+        # self.add(curves)
         self.play(
-            UpdateFromAlphaFunc(dots, update_dots),
-            run_time=evolution_time,
+            *[Create(curve) for curve in curves],
+            run_time=30,
             rate_func=linear,
         )
+
+        # # Display dots moving along those trajectories
+        # dots = VGroup(*[Dot(color=color, radius=0.25) for color in colors])
+
+        # # Create the traced path (trails)
+        # traced_paths = VGroup(
+        #     *[
+        #         TracedPath(dot.get_center, dissipating_time=3).match_color(dot)
+        #         for dot in dots
+        #     ]
+        # )
+
+        # def update_dots(dots, dt):
+        #     for dot, curve in zip(dots.submobjects, curves):
+        #         alpha = (
+        #             self.time / evolution_time
+        #         ) % 1  # Use time to calculate the position along the curve
+        #         dot.move_to(curve.point_from_proportion(alpha))
+
+        # # Add updater for the dots
+        # dots.add_updater(update_dots)
+        # self.add(dots, traced_paths)
+
+        # # Play the animation over evolution_time
+        # self.play(
+        #     UpdateFromAlphaFunc(dots, update_dots),
+        #     run_time=evolution_time,
+        #     rate_func=linear,
+        # )
 
         # Stop camera rotation at the end
         self.stop_ambient_camera_rotation(about="theta")
