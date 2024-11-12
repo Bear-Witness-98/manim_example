@@ -31,3 +31,4 @@ test-hq:
 
 clean:
 	rm -rf $(scene_dir)/media
+	rm -rf $(test_dir)/media
