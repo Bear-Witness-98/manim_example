@@ -6,11 +6,13 @@ from manim import (
     PI,
     RED,
     RIGHT,
+    TAU,
     UL,
     Circle,
     Create,
     Dot,
     Scene,
+    Surface,
     Tex,
     ThreeDAxes,
     ThreeDScene,
@@ -113,6 +115,31 @@ class LorenzAttractor(ThreeDScene):
         )
         # Stop camera rotation at the end
         self.stop_ambient_camera_rotation(about="theta")
+
+        surface = Surface(
+            lambda u, v: axes.c2p(*self.func(u, v)),
+            u_range=[-40, 40],
+            v_range=[-40, 40],
+            resolution=8,
+        )
+
+        surface2 = Surface(
+            lambda u, v: axes.c2p(*self.func2(u, v)),
+            u_range=[-40, 40],
+            v_range=[-40, 40],
+            resolution=8,
+        )
+
+        self.play(Create(surface))
+        self.play(Create(surface2))
+
+        self.wait(5)
+
+    def func(self, u, v):
+        return np.array([u, v, 0])
+
+    def func2(self, u, v):
+        return np.array([u, v, 2 * u - v])
 
 
 class TracedPathExample(Scene):

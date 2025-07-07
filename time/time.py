@@ -6,6 +6,7 @@ from manim import (
     BLUE,
     DOWN,
     GRAY,
+    GREEN,
     RED,
     ApplyFunction,
     Axes,
@@ -85,10 +86,12 @@ class TimeScene(Scene):
 
         def vertical_transform(point):
             x, y, z = point
-            return np.array([x, x + np.pi, z])
+            return np.array(
+                [x, np.cos((x / np.pi) + 1.5) - np.sin((x / np.pi) + 1.5), z]
+            )
 
         curve4 = curve2.copy().apply_function(vertical_transform)
 
-        self.play(Transform(curve2, curve4))
+        self.play(Transform(curve, curve4))
 
         self.wait()
